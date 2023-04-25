@@ -1,10 +1,29 @@
 useCertManager: false
 rootNamespace: tiny-django
 baseAppUrl: anysearch.t1m.me
+registryAuthRequired: false
+production: false
 backend:
   port: 8000
+  replicas: 3
   serviceName: backend-service
+  imageURL: localhost:32000/backend-image:registry
+  deploymentName: backend-deployment
+  secretName: backend-secret
+  requiresRegistryAuth: false
+  imagePullSecretName: backend-image-pull-secret
   useSockets: false
+  env:
+    ROOT_URL: 'http://localhost'
+    DJANGO_SECRET: 'SomeSecret'
 frontend:
   port: 3000
   serviceName: frontend-service
+  imageURL: localhost:32000/frontend-image:registry
+  deploymentName: frontend-deployment
+  secretName: frontend-secret
+  requiresRegistryAuth: false
+  imagePullSecretName: frontend-image-pull-secret
+  env:
+    ROOT_URL: 'http://localhost'
+    WEBSOCKET_PROTOCOL: 'ws://'
