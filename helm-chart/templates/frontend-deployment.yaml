@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.frontend.deploymentName }}
+  namespace: {{ .Values.rootNamespace }}
+  labels:
+    app: {{ .Values.frontend.deploymentName }}
+spec:
+  replicas: {{ .Values.frontend.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Values.frontend.deploymentName }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.frontend.deploymentName }}
+    spec:
+      containers:
+        - name: {{ .Values.frontend.deploymentName }}
+          image: {{ .Values.frontend.imageURL }}
+          ports:
+            - containerPort: {{ .Values.frontend.port }}
+          envFrom:
+            - secretRef:
+                name: {{ .Values.frontend.secretName }}
+      {{- if .Values.frontend.requiresRegistryAuth }}
+      imagePullSecrets:
+        - name: {{ .Values.frontend.imagePullSecretName }}
+      {{- end }}
