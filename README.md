@@ -1,21 +1,51 @@
-### Tiny Django
+### k8s-django-nextjs
 
-I've come to love django for rapid prototyping. However, I always feel that the initial structure for django apps is too complex for a fast micro service.
+Tim's stack. A fully scalabe django (microservices), nextjs (frontend), kubernetes stack.
 
-This repo represents a fully functional setup with a minimal footprint.
+Some cool skills:
 
-Configuration and route setup is done in `app.py` and there is an app `app` with some django models.
+- production / staging / development setup consistency
+- everything fully containerized
+- ONLY stystem requirement `microk8s`
+- automatic code & api documentation for django backend
+- full nextjs ssr compatability
+- host path mounts still allow live editing with hot reloads in development
 
-#### what is to come
+The django backend comes packed with a lot of convenient tooling.
+The combination of `django-nextjs` and custom `microk8s` routing allowes the backend to dynamicly request pre-rendered pages from next-js, django may also dynamicly pass data to any nextjs page, allowing SSR even for dynamic pages.
 
-I also often use:
+The combination of `rest_framework` and `djangorestframework-dataclasses` allowes to quickly and consisely write RESTFULL apis, rate limiting, token autorization etc always available.
 
-- `django_channels`.
-- `drf_spectacular`
-- `rest_framework`
-- `celery`
-- `nextjs` (for frontends)
+Based on automatic dataclass based serializers from `restframework-dataclasses` we can use `drf-spectacular[sidecar]` to generate and render full openapi documentations.
 
-I'm going to be adding minimal setups for all of these.
+### setup / development
 
-This shall become a one click setup for a minimal feature rich django setup aimed at rapid prototying.
+1. install `microk8s` [instuctions mac / linux], [instuctions windows]
+2. enable services `microk8s enable helm ingress dns registry`
+3. start kubernetes `microk8s start`
+4. Install the helm chart in dev-mode `microk8s helm install --dry-run --debug ./helm-chart/ --generate-name --set rootDir=$(pwd)`
+5. Check that the servies are running
+
+When you stop developing simply do `microk8s stop` and `microk8s start` to continue.
+Local development will automaticly mount directorys `back`, `front` for hot code reloading.
+
+Appart from that an serveral smaller differences like cert-manager, container-secrets, etc. , are production and development environments identical.
+
+#### Build images
+
+for development
+
+```bash
+docker build -f Dockerfile.back_dev back
+docker build -f Dockerfile.front_dev front
+
+```
+
+#### convenience mappings
+
+`alias helm="microk8s helm"`
+`alias kubectl="microk8s kubectl"`
+
+### Usage
+
+helm chart changed: `microk8s helm install --dry-run --debug ./helm-chart/ --generate-name`
