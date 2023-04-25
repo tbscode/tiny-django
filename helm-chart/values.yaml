@@ -1,6 +1,6 @@
 useCertManager: false
 rootNamespace: tiny-django
-baseAppUrl: anysearch.t1m.me
+baseAppUrl: localhost
 registryAuthRequired: false
 production: false
 backend:
@@ -13,6 +13,10 @@ backend:
   requiresRegistryAuth: false
   imagePullSecretName: backend-image-pull-secret
   useSockets: false
+  mountCodeRoot: true
+  mount:
+    pvcName: backend-pvc
+    storage: 5Gi
   env:
     ROOT_URL: 'http://localhost'
     DJANGO_SECRET: 'SomeSecret'
