@@ -1,0 +1,10 @@
+useCertManager: false
+rootNamespace: tiny-django
+baseAppUrl: anysearch.t1m.me
+backend:
+  port: 8000
+  serviceName: backend-service
+  useSockets: false
+frontend:
+  port: 3000
+  serviceName: frontend-service
