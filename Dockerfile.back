@@ -10,5 +10,7 @@ COPY ./requirements.txt /tmp/requirements.txt
 RUN pip install --no-cache-dir -r /tmp/requirements.txt
 RUN pip cache purge
 
+EXPOSE 8000
+
 CMD ["sh", "spinup.sh"]
 #CMD ["tail", "-f", "/dev/null"]
