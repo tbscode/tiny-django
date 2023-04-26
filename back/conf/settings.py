@@ -37,6 +37,11 @@ DATABASES = {
     }
 }
 
+
+REST_FRAMEWORK = {
+    "DEFAULT_SCHEMA_CLASS": 'drf_spectacular.openapi.AutoSchema'
+}
+
 ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", "*").split(",")
 
 SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "secret-key")
