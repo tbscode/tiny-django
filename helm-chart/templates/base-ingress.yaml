@@ -27,32 +27,13 @@ spec:
       secretName: prod-ingress-tls-secret
   {{- end }}
   rules:
+    {{- if .Values.production }}
     - host: {{ .Values.baseAppUrl }}
       http:
+    {{- else}}
+    - http:
+    {{- end }}
         paths:
-          - path: /_next/
-            pathType: Prefix
-            backend:
-              service:
-                name: {{ .Values.frontend.serviceName }}
-                port:
-                  number: {{ .Values.frontend.port }}
-          - path: /_nstat/
-            pathType: Prefix
-            backend:
-              service:
-                name: {{ .Values.frontend.serviceName }}
-                port:
-                  number: {{ .Values.frontend.port }}
-          {{- if .Values.backend.useSockets }}
-          - path: /ws/
-            pathType: Prefix
-            backend:
-              service:
-                name: {{ .Values.backend.serviceName }}
-                port:
-                  number: {{ .Values.backend.port }}}
-          {{- end }}
           - path: /
             pathType: Prefix
             backend:

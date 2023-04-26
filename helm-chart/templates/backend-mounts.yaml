@@ -1,38 +1,38 @@
 {{- if .Values.backend.mountCodeRoot }}
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: {{ .Values.backend.mount.volumeName }}
+spec:
+  capacity:
+    storage: {{ .Values.backend.mount.storage }}
+  accessModes:
+  - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: microk8s-hostpath
+  hostPath:
+    path: {{ .Values.rootDir }}/back
+    type: DirectoryOrCreate
+---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
+  namespace: {{ .Values.rootNamespace }}
   name: {{ .Values.backend.mount.pvcName }}
 spec:
-  storageClassName: ssd-hostpath
   accessModes: [ReadWriteOnce]
   resources: { requests: { storage: {{ .Values.backend.mount.storage }} } }
+  volumeName: {{ .Values.backend.mount.volumeName }}
 ---
 kind: StorageClass
 apiVersion: storage.k8s.io/v1
 metadata:
+  namespace: {{ .Values.rootNamespace }}
   name: ssd-hostpath
 provisioner: microk8s.io/hostpath
 reclaimPolicy: Delete
 parameters:
-  pvDir: '{{ .Values.rootDir }}/back'
+  pvDir: '{{ .Values.rootDir }}'
 volumeBindingMode: WaitForFirstConsumer
----
-apiVersion: v1
-kind: Pod
-metadata:
-  name: test-nginx-ssd
-spec:
-  volumes:
-    - name: pvc
-      persistentVolumeClaim:
-        claimName: {{ .Values.backend.mount.pvcName }}
-  containers:
-    - name: nginx
-      image: nginx
-      ports:
-        - containerPort: 80
-      volumeMounts:
-        - name: pvc
-          mountPath: /back
 {{- end }}

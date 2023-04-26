@@ -3,11 +3,12 @@ rootNamespace: tiny-django
 baseAppUrl: localhost
 registryAuthRequired: false
 production: false
+development: true
 backend:
   port: 8000
-  replicas: 3
+  replicas: 1
   serviceName: backend-service
-  imageURL: localhost:32000/backend-image:registry
+  imageURL: localhost:32000/backend-image:latest
   deploymentName: backend-deployment
   secretName: backend-secret
   requiresRegistryAuth: false
@@ -16,10 +17,13 @@ backend:
   mountCodeRoot: true
   mount:
     pvcName: backend-pvc
+    volumeName: backend-dev-volume
     storage: 5Gi
   env:
     ROOT_URL: 'http://localhost'
-    DJANGO_SECRET: 'SomeSecret'
+    DJANGO_SECRET_KEY: 'SomeSecret'
+    DJANGO_ALLOWED_HOSTS: '*'
+    REDIS_URL: 'redis://redis:6379/0'
 frontend:
   port: 3000
   serviceName: frontend-service
