@@ -24,6 +24,8 @@ backend:
     DJANGO_SECRET_KEY: 'SomeSecret'
     DJANGO_ALLOWED_HOSTS: '*'
     REDIS_URL: 'redis://redis:6379/0'
+    USE_NEXTJS_PROXY_ROUTES: true
+    NEXTJS_HOST_URL: 'http://backend-service.tiny-django.svc.cluster.local:3000'
 frontend:
   port: 3000
   serviceName: frontend-service
