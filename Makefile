@@ -5,25 +5,27 @@ kubernetes_namespace := tiny-django
 backend_pod_name := backend-deployment
 helm_installation_name := tiny-django
 
+backend_migrate_static:
+	docker run -v $(root_dir)/back:/back -it $(backend_img_sha) python3 app.py makemigrations
+	docker run -v $(root_dir)/back:/back -it $(backend_img_sha) python3 app.py migrate
+	docker run -v $(root_dir)/back:/back -it $(backend_img_sha) python3 app.py collectstatic --noinput
+
 backend_build:
-	docker build -t localhost:32000/backend-image:latest -f Dockerfile.back_dev back -q
+	docker build --progress=plain -t localhost:32000/backend-image:latest -f Dockerfile.back_dev back
+	$(MAKE) backend_migrate_static
 backend_push:
 	docker push localhost:32000/backend-image:latest
 backend_run:
 	echo "Running backend $(backend_img_sha)"
 	docker run --init --add-host=host.docker.internal:host-gateway -p 8000:8000 -v $(root_dir)/back:/back -it $(backend_img_sha)
 
-backend_migrate_static:
-	docker run -v $(root_dir)/back:/back -it $(backend_img_sha) python3 app.py makemigrations
-	docker run -v $(root_dir)/back:/back -it $(backend_img_sha) python3 app.py migrate
-	docker run -v $(root_dir)/back:/back -it $(backend_img_sha) python3 app.py collectstatic --noinput
 
 backend_build_push:
 	$(MAKE) backend_build
 	$(MAKE) backend_push
 	
 frontend_build:
-	docker build --progress=plain -t localhost:32000/frontend-image:latest -f Dockerfile.front_dev front -q
+	docker build --progress=plain -t localhost:32000/frontend-image:latest -f Dockerfile.front_dev front
 frontend_push:
 	docker push localhost:32000/frontend-image:latest
 frontend_run:
@@ -41,8 +43,9 @@ microk8s_route_backend_local:
 	
 microk8s_setup:
 	microk8s status
+	microk8s start
 	microk8s enable helm ingress dns registry
-	microk8s create namespace $(kubernetes_namespace)
+	microk8s kubectl create namespace $(kubernetes_namespace)
 	
 microk8s_status:
 	microk8s kubectl get all -n $(kubernetes_namespace)
