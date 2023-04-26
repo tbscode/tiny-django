@@ -18,7 +18,7 @@ backend_build_push:
 	$(MAKE) backend_push
 	
 frontend_build:
-	docker build -t localhost:32000/frontend-image:latest -f Dockerfile.front_dev front -q
+	docker build --progress=plain -t localhost:32000/frontend-image:latest -f Dockerfile.front_dev front -q
 frontend_push:
 	docker push localhost:32000/frontend-image:latest
 frontend_run:
