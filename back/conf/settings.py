@@ -6,13 +6,19 @@ IGNORABLE_404_URLS = [r'^favicon\.ico$']
 ROOT_URLCONF = 'conf.urls'
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 INSTALLED_APPS = [
+    'jazzmin',
+    'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'core'
+    'core',
+    'django_nextjs.apps.DjangoNextJSConfig',
+    'drf_spectacular',
+    'drf_spectacular_sidecar',
+    'rest_framework.authtoken'
 ]
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -48,6 +54,25 @@ NEXTJS_HOST_URL = os.environ.get(
 NEXTJS_SETTINGS = {
     "nextjs_server_url": NEXTJS_HOST_URL
 }
+
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+            ],
+        },
+    },
+]
+
 
 SPECTACULAR_SETTINGS = {
     'TITLE': 'API docs',
