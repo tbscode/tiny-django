@@ -1,8 +1,9 @@
+import os
 import sys
 
 DEBUG = True
 IGNORABLE_404_URLS = [r'^favicon\.ico$']
-ROOT_URLCONF = 'back.conf.urls'
+ROOT_URLCONF = 'conf.urls'
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 INSTALLED_APPS = [
     'django.contrib.auth',
@@ -29,3 +30,7 @@ DATABASES = {
         "NAME": "db.sqlite3",
     }
 }
+
+ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", "*").split(",")
+
+SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "secret-key")

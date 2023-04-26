@@ -13,3 +13,5 @@ django_nextjs
 openai
 ipython
 django-jazzmin
+psycopg2-binary
+uvicorn[standard]
