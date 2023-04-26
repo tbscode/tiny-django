@@ -13,6 +13,11 @@ backend_run:
 	echo "Running backend $(backend_img_sha)"
 	docker run --init --add-host=host.docker.internal:host-gateway -p 8000:8000 -v $(root_dir)/back:/back -it $(backend_img_sha)
 
+backend_migrate_static:
+	docker run -d -it $(backend_img_sha) python3 app.py makemigrations
+	docker run -d -it $(backend_img_sha) python3 app.py migrate
+	docker run -d -it $(backend_img_sha) python3 app.py collectstatic --noinput
+
 backend_build_push:
 	$(MAKE) backend_build
 	$(MAKE) backend_push
