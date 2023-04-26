@@ -35,4 +35,29 @@ reclaimPolicy: Delete
 parameters:
   pvDir: '{{ .Values.rootDir }}'
 volumeBindingMode: WaitForFirstConsumer
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: {{ .Values.frontend.mount.volumeName }}
+spec:
+  capacity:
+    storage: {{ .Values.frontend.mount.storage }}
+  accessModes:
+  - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: microk8s-hostpath
+  hostPath:
+    path: {{ .Values.rootDir }}/front
+    type: DirectoryOrCreate
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  namespace: {{ .Values.rootNamespace }}
+  name: {{ .Values.frontend.mount.pvcName }}
+spec:
+  accessModes: [ReadWriteOnce]
+  resources: { requests: { storage: {{ .Values.frontend.mount.storage }} } }
+  volumeName: {{ .Values.frontend.mount.volumeName }}
 {{- end }}
