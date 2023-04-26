@@ -11,7 +11,7 @@ backend_push:
 	docker push localhost:32000/backend-image:latest
 backend_run:
 	echo "Running backend $(backend_img_sha)"
-	docker run --init -p 8000:8000 -v $(root_dir)/back:/back -it $(backend_img_sha)
+	docker run --init --add-host=host.docker.internal:host-gateway -p 8000:8000 -v $(root_dir)/back:/back -it $(backend_img_sha)
 
 backend_build_push:
 	$(MAKE) backend_build
@@ -22,7 +22,7 @@ frontend_build:
 frontend_push:
 	docker push localhost:32000/frontend-image:latest
 frontend_run:
-	docker run --init -p 3000:3000 -v $(root_dir)/front:/front -it $(frontend_img_sha)
+	docker run --init --add-host=host.docker.internal:host-gateway -p 3000:3000 -v $(root_dir)/front:/front -it $(frontend_img_sha)
 	
 frontend_build_push:
 	$(MAKE) frontend_build
