@@ -35,6 +35,10 @@ frontend_build_push:
 	$(MAKE) frontend_build
 	$(MAKE) frontend_push
 	
+full_build_deploy:
+	$(MAKE) backend_build_push
+	$(MAKE) frontend_build_push
+	
 microk8s_attach_backend:
 	microk8s kubectl exec --stdin --tty $(backend_pod_name) -n $(kubernetes_namespace) -- sh
 	
