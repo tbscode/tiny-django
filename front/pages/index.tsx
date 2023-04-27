@@ -34,5 +34,5 @@ export default function Index({ state, updateTheme }): JSX.Element {
   //hello alter
   console.log("STATE", state);
 
-  return (<h1>Test change</h1>);
+  return (<h1>Test change new change</h1>);
 }
