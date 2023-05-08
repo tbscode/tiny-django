@@ -1,3 +1,5 @@
+# (C) Tim Schupp, Tim Benjamin Software 2023
+
 root_dir := $(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
 backend_img_sha := $(shell docker images -q localhost:32000/backend-image:latest)
 frontend_img_sha := $(shell docker images -q localhost:32000/frontend-image:latest)
